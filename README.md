@@ -1,4 +1,4 @@
-# cms-social
+# CMS-Social v3.0.8 alpha
 
 ## Системные требования 
 
