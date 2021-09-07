@@ -87,10 +87,16 @@ $query = new DB_Mail(array(
 do_event('ds_messages_pre_output', $ank, $query); 
 
 echo '<div class="wrap-page-mail">'; 
-ds_message('mail', array(
-    'title' => __('Сообщения'), 
-    'type' => 'mail', 
-)); 
+
+if ($ank['ban'] == 0) {
+    ds_message('mail', array( 
+        'title' => __('Сообщения'), 
+        'type' => 'mail', 
+    ));     
+} else {
+    echo '<div class="not-form-text">' . __('Пользователь заблокирован') . '</div>'; 
+}
+
 
 echo '<div class="wrap-messages">'; 
 do_event('ds_messages_helper_before', $ank, $query); 

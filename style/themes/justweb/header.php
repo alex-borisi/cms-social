@@ -68,8 +68,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
             <div class="header-nav">
             <?php if (is_user()) : ?>
-                <a href="#"><i class="flaticon-074-wifi"></i></a>
-                <a href="<?php echo get_site_url('#'); ?>"><i class="flaticon-160-chat"></i></a>
+                <a href="<?php echo get_site_url('/feed/'); ?>"><i class="flaticon-074-wifi"></i></a>
+                <a href="#"><i class="flaticon-160-chat"></i></a>
                 <a href="<?php echo get_site_url('/user/notify/'); ?>">
                     <i class="flaticon-161-bell"></i>
                     <span class="counter" data-type="notify" data-count="<?php echo $counters['notify']['count']; ?>"><?php echo $counters['notify']['count']; ?></span>

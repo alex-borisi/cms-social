@@ -22,7 +22,8 @@ function get_version()
 * @return object | string | array
 */
 
-function ds_get($key, $default = NULL) {
+function ds_get($key, $default = NULL) 
+{
     if (isset($key)) { 
         $get = Registry::get($key); 
 
@@ -37,7 +38,8 @@ function ds_get($key, $default = NULL) {
 * Регистрирует глобальную переменную
 * @return bolean true
 */
-function ds_set($key, $var) {
+function ds_set($key, $var) 
+{
     return Registry::set($key, $var); 
 }
 
@@ -45,7 +47,8 @@ function ds_set($key, $var) {
 * Возвращает все глобальные данные
 * @return array
 */
-function ds_getAll() {
+function ds_getAll() 
+{
     return Registry::getAll($key); 
 }
 
@@ -152,11 +155,13 @@ function get_system()
     return $set; 
 }
 
-function sort_position($a, $b) { 
+function sort_position($a, $b) 
+{ 
     return strnatcmp($a["position"], $b["position"]); 
 } 
 
-function file_add_cache($cacheFile, $array) {
+function file_add_cache($cacheFile, $array) 
+{
     $cacheFile = PATH_CACHE . '/' . $cacheFile . '.cache';
 
     if (is_file($cacheFile)) {
@@ -166,7 +171,8 @@ function file_add_cache($cacheFile, $array) {
     file_put_contents($cacheFile, json_encode($array, JSON_UNESCAPED_UNICODE));
 }
 
-function file_get_cache($cacheFile) {
+function file_get_cache($cacheFile) 
+{
     $cacheFile = PATH_CACHE . '/' . $cacheFile . '.cache';
 
     if (is_file($cacheFile)) {
@@ -177,7 +183,8 @@ function file_get_cache($cacheFile) {
     return false; 
 }
 
-function file_delete_cache($cacheFile) {
+function file_delete_cache($cacheFile) 
+{
     $cacheFile = PATH_CACHE . '/' . $cacheFile . '.cache';
     if (is_file($cacheFile)) {
         unlink($cacheFile);
@@ -289,7 +296,8 @@ function ds_options_load()
     ds_set('ds_options', $cache);
 }
 
-function ds_get_file_extensions($path) {
+function ds_get_file_extensions($path) 
+{
     return strtolower(substr($path, strrpos($path, '.') + 1)); 
 }
 
@@ -353,7 +361,8 @@ function ds_check_installed()
     }
 }
 
-function is_serialized( $data ) {
+function is_serialized( $data ) 
+{
     if (!is_string($data)) {
         return false;
     }

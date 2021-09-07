@@ -22,7 +22,12 @@
 			$ajaxpage.AjaxPageLoad(url, true); 
 		}, false);
 
-		$(document).on('click', 'a[href],[data-href]', function() {
+		$(document).on('click', 'a[href],[data-href]', function(e) {
+
+			if (e.ctrlKey === true) {
+				return true; 
+			}
+
 			var url = $(this).attr('href') || $(this).attr('data-href'); 
 			var target = $(this).attr('target') || false; 
 			var media = $(this).attr('data-media') || false; 

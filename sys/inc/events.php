@@ -38,6 +38,9 @@ add_event('ds_init', 'handle_files_init', 10);
 // Инициализация ленты пользователя
 add_event('ds_init', 'handle_feeds_init', 10); 
 
+// Инициализация обсуждений пользователя
+add_event('ds_init', 'handle_discussions_init', 10); 
+
 // Инициализация лент пользователя
 add_event('ds_init', 'handle_lenta_init', 10); 
 
@@ -87,5 +90,6 @@ ds_rewrite_rule('search\/', H.'pages/search.php');
 ds_rewrite_rule('exit\.php', 'ds_user_logout'); 
 ds_rewrite_rule('(.*)\.php', H.'pages/$1.php');
 ds_rewrite_rule('feed\/', H.'user/feed/index.php');
+ds_rewrite_rule('feed\/([0-9]+)', H.'user/feed/comments.php', 'post_id=$1');
 
 ds_rewrite_rule('ds-ajax\/', ROOTPATH . '/sys/inc/ajax.php'); 

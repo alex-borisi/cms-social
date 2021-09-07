@@ -22,9 +22,10 @@ define('TIME', time());
 
 list($msec, $sec) = explode(chr(32), microtime()); 
 define('MICROTIME', $sec + $msec);
-
+ 
+define('OBJECT', 0); 
 define('ARRAY_A', true); 
-define('ARRAY_N', false); 
+define('ARRAY_N', false);
 
 /**
 * Возвращает время генерации страницы 
@@ -258,6 +259,7 @@ if (is_file(get_theme_directory() . '/functions.php')) {
 * Регистрация стандартных виджетов
 */ 
 if (!defined('SUPPORT_WIDGETS') || SUPPORT_WIDGETS == true) {
+    register_widget('Widget_Feed'); 
     register_widget('Widget_Html'); 
     register_widget('Widget_Text'); 
     

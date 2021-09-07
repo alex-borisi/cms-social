@@ -33,19 +33,21 @@ if (isset($_GET['id_group']) && db::count("SELECT COUNT(*) FROM `user_group` WHE
     echo "&laquo;<a href='accesses.php'>Группы</a><br />";
     echo "&laquo;<a href='index.php'>Админка</a><br />";
     echo "</div>\n";
-    include_once '../sys/inc/tfoot.php';
-}
-$set['title'] = 'Группы пользователей'; // заголовок страницы
-get_header_admin(); 
-echo "<div class='menu'>\n";
-$accesses = db::query("SELECT * FROM `user_group` ORDER BY `id` ASC");
-while ($res = $accesses->fetch_assoc()) {
-    echo "<a href='?id_group=$res[id]'>$res[name] (L$res[level], " . db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$res[id]'") . ")</a><br />\n";
-}
-echo "</div>\n";
-if (user_access('adm_panel_show')) {
-    echo "<div class='foot'>\n";
-    echo "&laquo;<a href='index.php'>Админка</a><br />";
+    get_footer_admin(); 
+} else {
+
+    $set['title'] = 'Группы пользователей'; // заголовок страницы
+    get_header_admin(); 
+    echo "<div class='menu'>\n";
+    $accesses = db::query("SELECT * FROM `user_group` ORDER BY `id` ASC");
+    while ($res = $accesses->fetch_assoc()) {
+        echo "<a href='?id_group=$res[id]'>$res[name] (L$res[level], " . db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$res[id]'") . ")</a><br />\n";
+    }
     echo "</div>\n";
+    if (user_access('adm_panel_show')) {
+        echo "<div class='foot'>\n";
+        echo "&laquo;<a href='index.php'>Админка</a><br />";
+        echo "</div>\n";
+    }
+    get_footer_admin();     
 }
-get_footer_admin(); 
