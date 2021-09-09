@@ -8,3 +8,6 @@ db::query("ALTER TABLE `ban` CHANGE `pochemu` `reason` VARCHAR(28) NULL DEFAULT 
 db::query("ALTER TABLE `ban` CHANGE `razdel` `time_create` INT(11) NOT NULL"); 
 db::query("ALTER TABLE `ban` CHANGE `id_ban` `banned_id` BIGINT(20) NOT NULL"); 
 db::query("ALTER TABLE `ban` CHANGE `post` `hide` INT(1) NULL DEFAULT '0'"); 
+
+
+@unlink(ROOTPATH.'/pages/new_mess.php'); 
