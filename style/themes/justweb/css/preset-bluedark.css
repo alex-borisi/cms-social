@@ -30,6 +30,7 @@ textarea::placeholder {
 	color: #4f6479; 
 }
 
+.ds-uploader-file::before, 
 .dpl[data-shuffle="1"] .dpl-shuffle, 
 .dpl[data-repeat="1"] .dpl-repeat, 
 .header-nav i::before, 
@@ -232,6 +233,7 @@ body {
     border-color: #25303c;
 }
 
+.ds-uploader-file, 
 .ds-editor-smiles, 
 .ds-posts-list .post, 
 .glr a, 
@@ -252,7 +254,14 @@ body {
 	color: darkgrey; 
 }
 
-.button, input[type="submit"] {
+.ds-uploader-select {
+    background-color: #465471;
+    border: 1px solid #94a2b5;
+    color: #ded7d9;
+}
+
+.button, 
+input[type="submit"] {
 	background-color: #465471; 
 }
 
@@ -269,6 +278,7 @@ input[type="submit"]:hover {
 .form-group:last-child {
 	border-top-color: #3f5367;
 }
+
 
 .c2 .page a, 
 .nav li.nav-number, 

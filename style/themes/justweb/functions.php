@@ -48,7 +48,7 @@ function jw_user_preset() {
 	return isset($presets[$preset_id]) ? $presets[$preset_id] : array(); 
 }
 
-add_event('init_head_theme', 'justweb_styles_init'); 
+add_event('ds_theme_styles_init', 'justweb_styles_init'); 
 function justweb_styles_init() 
 {
 	ds_theme_style_add(get_theme_uri() . '/css/fonts.css', 'justweb-fonts', THEME_VERSION, 'all'); 
@@ -61,7 +61,7 @@ function justweb_styles_init()
 	$preset = jw_user_preset(); 
 
 	if (isset($preset['url'])) {
-		ds_theme_style_add($preset['url'], 'preset', THEME_VERSION, 'all'); 
+		ds_theme_style_add($preset['url'], 'justweb-preset', THEME_VERSION, 'all'); 
 	}
 }
 
