@@ -854,7 +854,7 @@ function get_template_post($data, $slug = 'default')
             foreach($data['header']['content'] AS $key => $item) {
                 if ($key === 'post_time') {
                     $date = use_filters('ds_output_post_time', date('H:i', $item)); 
-                    $tpl[] = '<div data-time="' . $item . '" title="' . $date . '" class="' . $key . '">' . $date . '</div>';
+                    $tpl[] = '<div data-time="' . $item . '" title="' . ds_date('d F Y, H:i:s', $item) . '" class="' . $key . '">' . $date . '</div>';
                 } else {
                     $tpl[] = '<div class="' . $key . '">' . $item . '</div>';
                 } 

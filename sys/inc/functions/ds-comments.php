@@ -213,11 +213,21 @@ function get_comments_count($object, $object_id)
 	return $counters[$hash]; 
 }
 
+function get_panel_comment($type, $args) 
+{
+	$count = get_comments_count($type, $args['object_id']); 
+
+	$classes = array(); 
+	$classes[] = 'link-feed-comment';  
+
+	return '<a class="' . join(' ', $classes) . '" href="' . $args['url'] . '"><i class="fa fa-comment-o" aria-hidden="true"></i><span class="counter">' . $count . '</span></a>'; 
+}
+
+
 function get_comment_template($args) 
 {
     $template = use_filters('ds_comment_template', '<div class="%post_class%"><div class="ds-messages-post"><div class="ds-message-photo">%post_image%</div><div class="ds-message-content">%post_title% (%post_time%)<br /><div class="ds-message-text">%post_content%</div></div></div>%post_actions%</div>'); 
 
-    
     $html_actions = ''; 
     if (!empty($args['actions'])) {
     	$actions = array(); 

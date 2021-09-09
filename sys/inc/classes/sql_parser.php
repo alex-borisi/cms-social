@@ -49,7 +49,7 @@ class SQLParser
 
         for ( ; $position < $strlen; ++$position )
         {
-            $char  = $sql{ $position };
+            $char  = $sql[$position];
 
             switch ( $char )
             {
@@ -62,7 +62,7 @@ class SQLParser
 
                 case '#':
                     while ( $char !== "\r" && $char !== "\n" && $position < $strlen - 1 )
-                        $char = $sql{ ++$position };
+                        $char = $sql[++$position];
                     break;
 
                 case '`':
@@ -73,7 +73,7 @@ class SQLParser
 
                     while ( $position < $strlen - 1 )
                     {
-                        $char = $sql{ ++$position };
+                        $char = $sql[++$position];
 
                         if ( $char === '\\' )
                         {
@@ -81,10 +81,10 @@ class SQLParser
 
                             if ( $position < $strlen - 1 )
                             {
-                                $char   = $sql{ ++$position };
+                                $char   = $sql[++$position];
                                 $query .= $char;
 
-                                if ( $position < $strlen - 1 ) $char = $sql{ ++$position };
+                                if ( $position < $strlen - 1 ) $char = $sql[++$position];
                             }
                             else
                             {

@@ -199,10 +199,10 @@ input[type="submit"] {
 .form-group label {
     cursor: pointer;
 }
-.form-group label.d-block {
+.form-group .d-block {
     display: block;
 }
-.form-group label.label-title {
+.form-group .label-title {
     color: gray;
 }
 
@@ -660,6 +660,10 @@ a.ui-button:active,
     background-color: #fff;
     box-shadow: 0 0 4px -2px grey;
     padding: 10px;
+}
+
+.widget-ui-edit {
+    cursor: pointer;
 }
 
 .widget-title {

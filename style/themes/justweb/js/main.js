@@ -487,4 +487,45 @@ jQuery(function($) {
 			body.addClass('mobile-player-active'); 
 		} 
 	}); 
+
+	$(document).on('click', '.more-feed', function() {
+		var pages = Math.ceil($(this).attr('data-pages'));
+		var paged = Math.ceil($(this).attr('data-paged')) + 1;
+		var p_str = Math.ceil($(this).attr('data-p_str'));
+		var selector = $(this).attr('data-container');
+
+		if (pages < paged) {
+			return ;
+		}
+
+		$.ajax({
+			type: "POST",
+			url: '/ds-ajax/',
+			data: {
+				action: 'feeds', 
+				paged: paged, 
+				p_str: p_str, 
+			},
+			success: function(html) {
+				inProgress = false; 
+				$(document).find('.more-feed').attr('data-paged', paged);
+				$(document).find(selector).append(html);
+
+				if (pages == paged) {
+					$('.more-feed').hide(); 
+				}
+			}
+		});
+	});
+
+	var inProgress = false; 
+	$(document).on('scroll', function(e) {
+		$(document).find('[data-ajaxtype="scroll"]').each(function(indx, elem) {
+	    	if ($(window).scrollTop() + $(window).height() >= ($(document).height() - 300) && !inProgress) {
+	    		console.log('Loading..'); 
+	    		inProgress = true;  
+	    		$(elem).click();  
+	    	}
+		});
+	});
 }); 

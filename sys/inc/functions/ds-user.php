@@ -1,6 +1,23 @@
 <?php 
 
 /**
+ * Причины бана пользователя
+ * @return array 
+ * */ 
+
+function get_ban_reasons() 
+{
+    $reasons = use_filters('ds_user_reason_list', array(
+        'spam' => __('Спам или реклама'), 
+        'fraud' => __('Мошенничество'), 
+        'offense' => __('Оскорбления и мат'), 
+        'other' => __('Другое'), 
+    )); 
+
+    return $reasons; 
+}
+
+/**
 * Callback функция для поиска пользователей
 */
 function ds_callback_search_users($search) {
@@ -224,7 +241,7 @@ function shif( $str )
 
 function cookie_encrypt($data, $id = 0)
 {
-    $key = defined('SALT_COOKIE_USER') ? SALT_COOKIE_USER : md5(get_user_ip()); 
+    $key = defined('SALT_COOKIE_USER') ? SALT_COOKIE_USER : md5(get_ip_address()); 
 
     $l = strlen($key);
 
@@ -245,7 +262,7 @@ function cookie_encrypt($data, $id = 0)
 
 function cookie_decrypt($data, $id = 0)
 {
-    $key = defined('SALT_COOKIE_USER') ? SALT_COOKIE_USER : md5(get_user_ip()); 
+    $key = defined('SALT_COOKIE_USER') ? SALT_COOKIE_USER : md5(get_ip_address()); 
     $data = base64_decode($data); 
 
     $l = strlen($key);
@@ -508,6 +525,9 @@ function get_user($user_id = false)
             if (isset($ds_users[$user_id]['id'])) {
                 $group_access = get_group_access($ds_users[$user_id]['group_access']);
 
+                $ban = db::fetch("SELECT id FROM `ban` WHERE `user_id` = '$user_id' AND `time_until` > '" . time() . "' LIMIT 1", ARRAY_A);
+                $ds_users[$user_id]['ban'] = (isset($ban['id']) ? 1 : 0);
+
                 if ( $group_access['group_name'] == null ) {
                     $ds_users[$user_id]['level']      = 0;
                     $ds_users[$user_id]['group_name'] = 'Пользователь';
@@ -731,13 +751,13 @@ function passgen($k_simb = 8, $types = 3)
         switch ($type) 
         {        
             case 3:        
-            $password .= $large[mt_rand(0, strlen($large) - 1)];            
+                $password .= $large[mt_rand(0, strlen($large) - 1)];            
             break;            
             case 2:            
-            $password .= $small[mt_rand(0, strlen($small) - 1)];            
+                $password .= $small[mt_rand(0, strlen($small) - 1)];            
             break;            
             case 1:            
-            $password .= $numbers[mt_rand(0,9)];            
+                $password .= $numbers[mt_rand(0,9)];            
             break;        
         }    
     }    
@@ -956,24 +976,28 @@ function get_profile_media($user_id)
 { 
     $ank = get_user($user_id); 
 
+    if ($ank['ban']) {
+        return ;
+    }
+
     $menu['photos'] = array(
         'link' => get_site_url('/photos/index/' . $ank['nick'] . '/'), 
         'title' => __('Фотографии'), 
-        'icon' => '<img src="' . get_site_url('/style/icons/foto.png') . '" alt="Photo" />', 
+        'icon' => '<i class="fa fa-picture-o" aria-hidden="true"></i>', 
         'count' => get_count_files_user($user_id, 'photos'), 
     ); 
 
     $menu['files'] = array(
         'link' => get_site_url('/files/index/' . $ank['nick'] . '/'), 
         'title' => __('Файлы'), 
-        'icon' => '<img src="' . get_site_url('/style/icons/files.gif') . '" alt="Files" />', 
+        'icon' => '<i class="fa fa-folder-o" aria-hidden="true"></i>', 
         'count' => get_count_files_user($user_id, 'files'), 
     ); 
 
     $menu['music'] = array(
         'link' => get_site_url('/music/index/' . $ank['nick'] . '/'), 
         'title' => __('Музыка'), 
-        'icon' => '<img src="' . get_site_url('/style/icons/foto.png') . '" alt="Music" />', 
+        'icon' => '<i class="fa fa-music" aria-hidden="true"></i>', 
         'count' => get_count_files_user($user_id, 'music'), 
     ); 
 
@@ -982,10 +1006,16 @@ function get_profile_media($user_id)
 
 function get_profile_anketa($user_id) 
 {
+    $ank = get_user($user_id);
+
+    if ($ank['ban']) {
+        return ;
+    }
+
     $menu['anketa'] = array(
         'link' => get_site_url('/user/anketa/?id=' . $user_id), 
         'title' => __('Анкета'), 
-        'icon' => '<img src="' . get_site_url('/style/icons/anketa.gif') . '" alt="Anketa" />', 
+        'icon' => '<i class="fa fa-file-text-o" aria-hidden="true"></i>', 
     ); 
 
     return get_profile_menu(use_filters('get_profile_menu_anketa', $menu)); 
@@ -993,21 +1023,59 @@ function get_profile_anketa($user_id)
 
 function get_profile_friends($user_id) 
 {
+    $ank = get_user($user_id);
+
+    if ($ank['ban']) {
+        return ;
+    }
+
     $count = get_friends_counters($user_id); 
 
     $menu['friends'] = array(
         'link' => get_friends_link($user_id), 
         'title' => __('Друзья'), 
-        'icon' => '<img src="' . get_site_url('/style/icons/druzya.png') . '" alt="Friends" />', 
+        'icon' => '<i class="fa fa-users" aria-hidden="true"></i>', 
         'count' => $count['friends'], 
     ); 
 
     return get_profile_menu(use_filters('get_profile_menu_friends', $menu)); 
 }
 
+function get_profile_ban($user_id) {
+    $ank = get_user($user_id);
+
+    if ($ank['ban'] == 0) {
+        return ;
+    }
+    
+    $htmlTpl = array(); 
+
+    $q = db::query("SELECT * FROM `ban` WHERE `user_id` = '$user_id' AND `time_until` > '" . time() . "' ORDER BY `time_until` DESC");
+
+    while ($item =  $q->fetch_assoc()) {
+        $info = array(__('Кто заблокировал: %s', '<a href="' . get_user_url($item['banned_id']) . '">' . get_user_nick($item['banned_id']) . '</a>')); 
+        $info[] = __('Дата блокировки: %s', vremja($item['time_create'])); 
+
+        if ($item['comment']) {
+            $info[] = '<p>' . __('Комментарий: %s', output_text($item['comment'])) . '</p>'; 
+        }
+
+        $htmlTpl[] = '<div class="ds-ban-title">' . __('Действует до: %s', $item['forever'] == 0 ? vremja($item['time_until']) : __('Навсегда')) . '</div>';
+        $htmlTpl[] = '<div class="ds-ban-info">' .join('<br />', $info) . '</div>';
+
+    }
+    
+    return join('', $htmlTpl); 
+}
+
 function get_profile_action($user_id) 
 {
-    $ank = get_user($user_id); 
+    $ank = get_user($user_id);
+
+    if ($ank['ban']) {
+        return ;
+    }
+ 
     $menu = array(); 
 
     if (get_user_id() && $ank['id'] != get_user_id()) 
@@ -1015,7 +1083,7 @@ function get_profile_action($user_id)
         $menu['message'] = array(
             'link' => get_site_url('/mail.php?id=' . $user_id), 
             'title' => __('Написать сообщение'), 
-            'icon' => '<img src="' . get_site_url('/style/icons/pochta.gif') . '" alt="Message" />', 
+            'icon' => '<i class="fa fa-envelope-o" aria-hidden="true"></i>', 
         );     
 
         $labels = array(
@@ -1038,13 +1106,13 @@ function get_profile_action($user_id)
                 $menu['friends_' . $key] = array(
                     'link' => $link['url'], 
                     'title' => $link['title'], 
-                    'icon' => '<img src="' . get_site_url('/style/icons/druzya.png') . '" />', 
+                    'icon' => '<i class="fa fa-user-times" aria-hidden="true"></i>', 
                 );               
             } else {
                 $menu['friends_' . $key] = array(
                     'link' => $link['url'], 
                     'title' => $link['title'], 
-                    'icon' => '<img src="' . get_site_url('/style/icons/druzya.png') . '" />', 
+                    'icon' => '<i class="fa fa-user-plus" aria-hidden="true"></i>', 
                 ); 
             }
         }
@@ -1054,7 +1122,7 @@ function get_profile_action($user_id)
         $menu['settings'] = array(
             'link' => get_site_url('/user/settings/'), 
             'title' => __('Мои настройки'), 
-            'icon' => '<img src="' . get_site_url('/style/icons/settings.png') . '" alt="Settings" />', 
+            'icon' => '<i class="fa fa-gear" aria-hidden="true"></i>', 
             'template' => '<div class="ds-profile-group"><a href="%link" class="%class">%icon %title</span></a> | <a class="%class" href="' . get_site_url('/umenu.php') . '">' . __('Меню') . '</a></div>', 
         );     
     }
@@ -1068,6 +1136,15 @@ function get_profile_action($user_id)
 function ds_profile_view($user_id) 
 {
     $ank = get_user($user_id); 
+
+    if ($ank['ban'] == 1) {
+        $profile_ban_template = use_filters('ds_profile_ban_template', null, $ank); 
+
+        if ($profile_ban_template !== null) {
+            echo $profile_ban_template; 
+            return ; 
+        }
+    }
 
     // Зарегистрированные области 
     $boxes = get_profile_boxes(); 
@@ -1095,7 +1172,7 @@ function ds_profile_view($user_id)
 }
 
 /**
-* Регистрируем стандартный профиля пользователя
+* Регистрируем стандартный профиль пользователя
 */ 
 function ds_profile_load() 
 {
@@ -1112,6 +1189,12 @@ function ds_profile_load()
     add_profile_item('ds_profile_head', array(
         'function' => 'get_profile_avatar', 
         'class'    => 'ds-profile-avatar', 
+    )); 
+
+    // Информация о бане
+    add_profile_item('ds_profile_head', array(
+        'function' => 'get_profile_ban', 
+        'class'    => 'ds-profile-ban', 
     )); 
 
     // Область меню пользователя

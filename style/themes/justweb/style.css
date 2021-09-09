@@ -1,6 +1,6 @@
 /**
 * Theme Name: Just Web
-* Version: 1.0.5
+* Version: 1.0.4
 * Status: beta
 * Author: alex-borisi
 * Author URI: https://andryushkin.ru
@@ -215,6 +215,7 @@ div:hover::-webkit-scrollbar-thumb {
 }
 
 .page_content {
+    width: 100%; 
     position: relative;
     flex: 1;
     order: 2;
@@ -592,10 +593,10 @@ div:hover::-webkit-scrollbar-thumb {
     margin-right: 10px;
 }
 .ds-select-item:hover {
-    box-shadow: 0px -2px 0px inset lightgray;
+    box-shadow: 0px -3px 0px -1px inset lightgray;
 }
 .ds-select-item.active {
-    box-shadow: 0px -2px 0px inset #42a4dd;
+    box-shadow: 0px -3px 0px -1px inset #42a4dd;
 }
 
 .ds-select-counter {
@@ -742,6 +743,16 @@ div:hover::-webkit-scrollbar-thumb {
     height: 100%;
     position: relative;
     justify-content: flex-end;
+}
+
+.wrap-page-mail .not-form-text {
+    position: absolute;
+    top: 44px;
+    left: 0px;
+    padding: 20px;
+    background-color: #fff1f1;
+    width: 100%;
+    z-index: 1;
 }
 
 body.ds-page-mail {
@@ -948,24 +959,25 @@ body.ds-page-mail .ds-messages {
     max-width: 640px;
 }
 
-.ds-messages-post .dpl {
+.ds-output-audios .dpl {
     margin: 5px 0;
-    min-width: 250px;
+    max-width: 100%;
+    width: 200px;
 }
 
-.ds-messages-post .dpl-toggle {
+.ds-output-audios .dpl-toggle {
     height: 24px;
     width: 24px;
     line-height: 24px;
     border: 0;
 }
 
-.ds-messages-post .dpl-time {
+.ds-output-audios .dpl-time {
     font-size: 11px;
     width: auto;
 }
 
-.ds-messages-post .dpl-title {
+.ds-output-audios .dpl-title {
     top: 5px; 
     font-size: 10px; 
     line-height: 10px; 
@@ -973,16 +985,16 @@ body.ds-page-mail .ds-messages {
     width: calc(100% - 60px);
 }
 
-.ds-messages-post .dpl-title + .dpl-progress {
+.ds-output-audios .dpl-title + .dpl-progress {
     margin-top: 11px;
 }
 
-.ds-messages-post .dpl-progress {
+.ds-output-audios .dpl-progress {
     width: calc(100% - 60px);
     height: 5px;
 }
 
-.ds-messages-post .dpl-volume {
+.ds-output-audios .dpl-volume {
     display: none;
 }
 
@@ -1135,6 +1147,32 @@ body.ds-page-mail .ds-messages {
     word-break: break-all;
 }
 
+.ds-profile-ban {
+    padding: 0 10px;
+}
+
+.ds-profile-ban .ds-ban-title {
+    background-color: #fff4f4;
+    border: 1px solid #ffdada;
+    border-radius: 3px 3px 0 0;
+    padding: 10px;
+}
+
+.ds-profile-ban .ds-ban-info {
+    background-color: #fdfdfd;
+    border-radius: 0 0 3px 3px;
+    padding: 10px;
+    border: 1px solid #fedada;
+    border-top: 0;
+    margin-bottom: 10px;
+}
+
+
+.ds-profile-ban p {
+    margin-top: 10px;
+    color: gray; 
+}
+
 .ds-profile-menu {
     display: block;
     border-bottom: 1px solid #e8e8e8;
@@ -1160,6 +1198,19 @@ body.ds-page-mail .ds-messages {
 
 .ds-profile-menu a .counter {
     color: #000000;
+}
+
+.ds-profile-menu .fa {
+    margin-right: 4px;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    border: 1px solid #69bff1;
+    padding: 5px;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 16px;
+    background-color: #fff; 
 }
 
 form .main {
@@ -1585,21 +1636,6 @@ form[name="message"] {
     display: none;
 }
 
-/*
-.list-item-counter {
-    background-color: #929292;
-    color: #ffffff;
-    border-radius: 8px;
-    display: inline-block;
-    padding: 0 8px;
-    vertical-align: middle;
-    line-height: 16px;
-    font-size: 13px;
-    margin-left: 3px;
-    float: right;
-}
-*/
-
 
 .list-empty {
     margin: 10px;
@@ -1645,6 +1681,74 @@ form[name="message"] {
 }
 .textarea-panel span:hover {
     opacity: 1;
+}
+
+.ds-editor-smiles {
+    position: absolute;
+    z-index: 1;
+    width: 400px;
+    height: 192px;
+    right: 0;
+    bottom: 50px;
+    background-color: #fbfbfb;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+}
+
+.ds-editor-smiles::after,
+.ds-editor-smiles::before {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid #e6e6e6;
+    position: absolute;
+    bottom: -7px;
+    right: 24px;
+    content: '';
+}
+
+.ds-editor-smiles::after {
+    border-top: 5px solid #fbfbfb;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    bottom: -5px;
+    right: 26px;
+}
+
+.smiles-list-title {
+    padding: 7px 10px;
+    position: sticky;
+    top: 0px;
+    background-color: #fbfbfb;
+    color: #afafaf;
+}
+
+.smiles-list {
+    height: 100%; 
+    width: 100%; 
+    overflow-y: auto;
+    border-radius: 4px;
+}
+
+.smiles-list-category {
+    padding: 0 8px;
+}
+
+.smiles-list-category span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    border-radius: 4px;
+    margin-right: 3px;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+
+.smiles-list-category span:hover {
+    background-color: #eaf3ff;
 }
 
 .ds-comment-form-textarea .ds-editor-smiles,
@@ -2321,6 +2425,7 @@ div.aligment-horisontal {
 
 
 
+
 /**
 * Likes 
 */ 
@@ -2329,6 +2434,7 @@ div.aligment-horisontal {
     cursor: pointer; 
 }
 
+.link-feed-comment .counter,
 .ds-like .counter {
     display: inline-block;
     vertical-align: middle;
@@ -2350,6 +2456,24 @@ div.aligment-horisontal {
 }
 .ds-i-liked .icon-like::before {
     content: "\f004";
+}
+
+.ds-like ~ .link-feed-comment {
+    margin-left: 20px;
+}
+
+.link-feed-comment {
+    display: inline-block;
+    vertical-align: middle;
+    height: 25px;
+}
+
+.link-feed-comment .fa::before {
+    font-size: 24px;
+}
+
+.ds-feed-single .post-panel {
+    display: none;
 }
 
 form.ds-reg-form {
@@ -2515,12 +2639,38 @@ form.ds-reg-form {
     flex: auto;
 }
 
-
 .registration-suspend {
     border: 2px solid #ef7373;
     padding: 20px;
     margin: 20px;
     text-align: center;
+}
+
+.widget-feed .more-feed {
+    display: block;
+    margin: 15px auto;
+    width: fit-content;
+    padding: 5px 30px;
+}
+
+.widget-link-online {
+    display: block;
+    padding: 10px;
+    background-color: #f4f6f8;
+    text-align: center;
+    color: #464646;
+    -webkit-box-shadow: 0px 3px 3px rgb(57 83 135 / 30%);
+    -moz-box-shadow: 0px 3px 3px rgba(57,83,135,0.3);
+    box-shadow: 0px 3px 3px rgb(57 83 135 / 30%);
+}
+
+.widget-link-online:hover {
+    background-color: #edf1f5;
+}
+
+.widget-link-online .fa {
+    color: #6ebeed;
+    font-size: 17px;
 }
 
 @media (max-width: 767px) {
@@ -2685,6 +2835,8 @@ form.ds-reg-form {
         height: 100%;
     }
 
+    .ds-editor-smiles, 
+    .smile-panel-toggle, 
     .header-logo, 
     .page_sidebar,
     .header-search, 
@@ -2773,5 +2925,9 @@ form.ds-reg-form {
 @media (min-width: 768px) {
     body.ds-page-mail .page_content {
         height: calc(100vh - 60px);
+    }
+
+    .ds-output-audios .dpl {
+        width: 400px;
     }
 }

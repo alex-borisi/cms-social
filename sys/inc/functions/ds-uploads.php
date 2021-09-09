@@ -76,6 +76,26 @@ function clear_object_attachments($file)
 					}
 				}
 				break; 
+
+			case 'feed': 
+				$feed = db::fetch("SELECT * FROM `feeds` WHERE `id` = '" . $post['object_id'] . "' LIMIT 1"); 
+				$array = unserialize($feed['content']); 
+
+				if (is_array($array)) {
+					$key = array_search($post['id'], $array); 
+
+					if ($key) {
+						unset($array[$key]); 
+						if (count($array) > 0) {
+							update_user_feed($feed['id'], $array);
+						} else {
+							delete_user_feed($feed['id']);
+						}
+					}					
+				}
+
+				break;
+
 			default:
 				do_event("clear_" . $post['object'] . "_attachments", $file['id'], $post['object'], $post['object_id'], $post); 
 				break; 

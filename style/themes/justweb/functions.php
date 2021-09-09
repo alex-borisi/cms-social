@@ -8,6 +8,15 @@ require dirname(__FILE__) . '/includes/template-user.php';
 require dirname(__FILE__) . '/includes/template-functions.php'; 
 require dirname(__FILE__) . '/includes/jw-modal-ajax.php'; 
 
+
+if (!defined('SUPPORT_WIDGETS') || SUPPORT_WIDGETS == true) {
+	require dirname(__FILE__) . '/widgets/JW_Widget_Online.php'; 
+
+	add_event('ds_register_widgets', function() {
+		register_widget('JW_Widget_Online'); 
+	}); 
+}
+
 add_event('ds_admin_init', 'justweb_admin_settings'); 
 function justweb_admin_settings() {
     add_settings_page('justweb', __t('Настроить тему', LANGUAGE_DOMAIN), 'adm_set_sys', 'justweb_admin_page_settings', __t('Настроить тему', LANGUAGE_DOMAIN), false); 
@@ -39,7 +48,7 @@ function jw_user_preset() {
 	return isset($presets[$preset_id]) ? $presets[$preset_id] : array(); 
 }
 
-add_event('init_head_theme', 'justweb_styles_init'); 
+add_event('ds_theme_styles_init', 'justweb_styles_init'); 
 function justweb_styles_init() 
 {
 	ds_theme_style_add(get_theme_uri() . '/css/fonts.css', 'justweb-fonts', THEME_VERSION, 'all'); 
@@ -52,7 +61,7 @@ function justweb_styles_init()
 	$preset = jw_user_preset(); 
 
 	if (isset($preset['url'])) {
-		ds_theme_style_add($preset['url'], 'preset', THEME_VERSION, 'all'); 
+		ds_theme_style_add($preset['url'], 'justweb-preset', THEME_VERSION, 'all'); 
 	}
 }
 
@@ -524,6 +533,25 @@ function justweb_output_json($json) {
 }
 
 
+// Подгрузка ленты
+add_filter('ajax_feeds_callback', function() {
+	$paged = (isset($_POST['paged']) ? (int) $_POST['paged'] : 1); 
+	$p_str = (isset($_POST['p_str']) ? (int) $_POST['p_str'] : 1); 
+
+	$args = array(
+		'user_id' => get_user_id(), 
+		'p_str' => ($p_str ? $p_str : 5), 
+		'paged' => $paged,
+	); 
+
+	$query = new DB_Feeds($args); 
+	foreach($query->items AS $feed) {
+		ds_output_feed($feed); 
+	}
+
+	die();  
+}); 
+
 
 add_filter('ds_comment_link_reply', 'justweb_comment_link_reply', 10, 2); 
 function justweb_comment_link_reply($action, $post) {
@@ -556,7 +584,6 @@ function justweb_messages_contact($ank) {
 add_event('ds_messages_helper_before', 'justweb_messages_helper_before'); 
 function justweb_messages_helper_before($ank) {
 	echo '<div class="mail_Pagination-helper"></div>'; 
-	echo ''; 
 }
 
 add_event('ds_messages_helper_after', 'justweb_messages_helper_after'); 

@@ -25,7 +25,7 @@ function get_editor($name = 'msg', $value = '', $attr = array()) {
 
 	$ds_button = use_filters('ds_editor_panel_buttons', $ds_button, $hash, $name); 
 
-	$ds_smiles = use_filters('ds_editor_panel_smiles', ''); 
+	$ds_smiles = use_filters('ds_editor_panel_smiles', get_list_emoji_html($hash)); 
 
 	$ds_editor .= '<div class="ds-editor-panel">' . join(' ', $ds_button) . '</div>';
 	$ds_editor .= '<div class="ds-editor-smiles">' . $ds_smiles . '</div>';
