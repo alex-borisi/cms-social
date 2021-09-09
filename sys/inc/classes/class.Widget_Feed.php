@@ -12,10 +12,11 @@ class Widget_Feed extends Widget
 	public function form($instance) 
 	{
 		$ajax_load_more = $this->get_field('ajax_load_more') ?: 'scroll'; 
+		$ajax_p_str = $this->get_field('p_str') ?: 5; 
 		?>
 		<div class="form-group">
 			<label for="wf-pstr" class="d-block label-title"><?php echo __('Записей на страницу'); ?></label>
-			<input id="wf-pstr" type="tel" name="p_str" placeholder="<?php echo __('По умолчанию: %s', 5); ?>" value="<?php echo (int) $this->get_field('p_str'); ?>" />
+			<input id="wf-pstr" type="tel" name="p_str" placeholder="<?php echo __('По умолчанию: %s', 5); ?>" value="<?php echo (int) $ajax_p_str; ?>" />
 
 			<div class="label-title"><?php echo __('Метод пагинации виджета'); ?></div>
 
