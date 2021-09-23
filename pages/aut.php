@@ -47,9 +47,6 @@ $set['title'] = __('Авторизация');
 
 get_header(); 
 
-if ( ( !isset( $_SESSION['refer'] ) || $_SESSION['refer'] == NULL ) && isset( $_SERVER['HTTP_REFERER'] ) && $_SERVER['HTTP_REFERER'] != NULL && !preg_match( '#mail\.php#', $_SERVER['HTTP_REFERER'] ) )
-    $_SESSION['refer'] = str_replace( '&', '&amp;', preg_replace( '#^http://[^/]*/#', '/', $_SERVER['HTTP_REFERER'] ) );
-
 ?>
 <form class="ds-auth-form" action="?" method="POST">
 	<?php do_event('ds_auth_fields_before'); ?>

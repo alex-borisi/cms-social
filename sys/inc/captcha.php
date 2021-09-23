@@ -30,7 +30,7 @@ class captcha
     function create( )
     {
         for ( $i = 0; $i < 5; $i++ ) {
-            $n = $this->str{$i};
+            $n = $this->str[$i];
             if ( $this->png )
                 $num[$n] = imagecreatefrompng( H . '/style/captcha/' . $n . '.png' );
             elseif ( $this->gif )
