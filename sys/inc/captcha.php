@@ -13,7 +13,7 @@ class captcha
     function __construct( $str )
     {
         if ( !function_exists( 'gd_info' ) ) {
-            header( 'Location: /style/errors/gd_err.gif' );
+            header( 'Location: /style/captcha/gd_err.gif' );
             exit;
         }
         if ( imagetypes() & IMG_PNG )
