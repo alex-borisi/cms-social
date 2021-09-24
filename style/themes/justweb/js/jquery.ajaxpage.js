@@ -185,6 +185,14 @@
 			});  
 
 			$('#ajax-style').remove(); 
+
+
+			$('[data-scroll="true"]').bind('scroll', function() {
+			    clearTimeout(is_scrolling); 
+			    is_scrolling = setTimeout(function() {
+			    	is_scrolling = false; 
+			    }, 300); 
+			}); 
 		}
 
 		return this; 
