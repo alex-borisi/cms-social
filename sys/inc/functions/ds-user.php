@@ -1106,13 +1106,13 @@ function get_profile_action($user_id)
                 $menu['friends_' . $key] = array(
                     'link' => $link['url'], 
                     'title' => $link['title'], 
-                    'icon' => '<i class="fa fa-user-times" aria-hidden="true"></i>', 
+                    'icon' => '<i class="fa fa-user" aria-hidden="true"></i>', 
                 );               
             } else {
                 $menu['friends_' . $key] = array(
                     'link' => $link['url'], 
                     'title' => $link['title'], 
-                    'icon' => '<i class="fa fa-user-plus" aria-hidden="true"></i>', 
+                    'icon' => '<i class="fa fa-user" aria-hidden="true"></i>', 
                 ); 
             }
         }
