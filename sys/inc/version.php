@@ -11,7 +11,7 @@
 * Версия системы CMS-Social
 * @global string $cs_core_version
 */ 
-$cs_core_version = '3.0.9';  
+$cs_core_version = '3.0.10';  
 
 /**
 * Рекомендуемая версия PHP 

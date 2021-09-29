@@ -454,13 +454,13 @@ jQuery(function($) {
 
 	$(document).on('click', '[data-toggle]', function(e) {
 		var uid = $(this).attr('data-toggle'); 
-		var current = $(this).closest('.ds-comment-form').attr('data-panel');
+		var current = $(this).closest('.ds-editor').attr('data-panel');
 
 		if (current == uid) {
 			uid = ''; 
 		}
 
-		$(this).closest('.ds-comment-form').attr('data-panel', uid);
+		$(this).closest('.ds-editor').attr('data-panel', uid);
 	});
 
 	$(document).on('click', '.mobile-sidebar-toggle', function(e) {

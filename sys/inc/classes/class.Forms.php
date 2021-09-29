@@ -259,20 +259,60 @@ class Forms
     public function editor($attr) 
     {
         $attr = array_merge($this->fields_default, $attr);
-        
+        $hash = md5(get_salt() . $attr['field_name']); 
+        $data = get_text_array($attr['field_value']); 
+
         $html = '<div class="form-group">'; 
         if (!empty($attr['field_title'])) {
             $html .= '<label class="label-title" for="Textarea' . $attr['field_name'] . '">' . $attr['field_title'] . '</label>'; 
         }
 
         $html .= '<div class="input-group mb-3">'; 
-        //$html .= '<textarea rows="5" class="form-control" id="Textarea' . $attr['field_name'] . '" name="' . $attr['field_name'] . '" placeholder="' . (!empty($attr['field_placeholder']) ? $attr['field_placeholder'] : '') . '" ' . $this->get_attributes($attr['field_attr']) . '>' . $attr['field_value'] . '</textarea>'; 
-
-        $html .= get_editor($attr['field_name'], $attr['field_value'], array(
+        $html .= get_editor($attr['field_name'], input_value_text(isset($data['content']) ? $data['content'] : $attr['field_value']), array(
             'placeholder' => (!empty($attr['field_placeholder']) ? $attr['field_placeholder'] : ''), 
         )); 
-        $html .= '</div>';
 
+        if (is_user()) {
+            $html .= '<div class="ds-form-attach">'; 
+            $html .= '<div class="choose">'; 
+            $html .= '<span class="choose-attachment" data-hash="' . $hash . '"> ' . __('Прикрепить файл') . '</span>';
+            $html .= '<div class="choose-types" data-hash="' . $hash . '">';
+            $all_media = get_media_types(); 
+
+            foreach($all_media AS $type => $media) {
+                if ($media['attachments'] === true) {
+                    $html .= '<a data-hash="' . $hash . '" data-type="' . $type . '" data-term="0" data-accept="' . join(',', $media['accept']) . '" class="choose-type choose-type-' . $type . ' load-files"><i class="fa ' . $media['icons']['attachments'] . '"></i> ' . $media['labels']['title'] . '</a>'; 
+                }
+            }
+
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+
+            $attachments = array(); 
+            
+            if (!empty($data['data']['attachments'])) {
+                foreach($data['data']['attachments'] AS $attach_id) {
+                    $file = get_file($attach_id); 
+
+                    if (!$file) {
+                        continue;
+                    }
+
+                    $thumbnail = ''; 
+                    if (is_file_thumbnail($file['id'], 'thumbnail')) {
+                        $thumbnail = get_file_thumbnail_url($file['id'], 'thumbnail'); 
+                    }
+
+                    $attachments[] = '<div style="' . ($thumbnail ? 'background-image: url('.$thumbnail.')' : '') . '" class="attachments-item"><input type="hidden" value="' . $attach_id . '" name="attachments[]"><i class="' . get_file_icon($file, true) . '"></i><span class="title">' . text($file['title']) . '</span><span class="remove">×</span></div>'; 
+                }
+            }
+
+            $html .= '<div data-hash="' . $hash . '" id="attachments-' . $hash . '" class="attachments">'.join('', $attachments).'</div>';
+            $html .= '<div data-hash="' . $hash . '" class="wrap-choose-manager"></div>';             
+        }
+
+        $html .= '</div>';
 
         if ($attr['field_desc']) {
              $html .= '<small class="form-text text-muted">' . $attr['field_desc'] . '</small>';

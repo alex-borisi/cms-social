@@ -596,7 +596,7 @@ add_filter('filter_message_form_args', function($args) {
 	return $args; 
 }); 
 
-add_event('ds_comment_textarea_after', 'justweb_bbpanel_toggle', 10, 2); 
-function justweb_bbpanel_toggle($hash, $args) {
-	echo '<div class="textarea-panel"><span class="bb-panel-toggle" data-toggle="bbpanel"><i class="fa fa-font"></i></span> <span data-toggle="smiles" class="smile-panel-toggle"><i class="fa fa-smile-o"></i></span></div>'; 
+add_event('ds_editor_textarea_after', 'justweb_bbpanel_toggle', 10, 1); 
+function justweb_bbpanel_toggle($before) {
+	return '<div class="textarea-panel"><span class="bb-panel-toggle" data-toggle="bbpanel"><i class="fa fa-font"></i></span> <span data-toggle="smiles" class="smile-panel-toggle"><i class="fa fa-smile-o"></i></span></div>' . $before; 
 }
