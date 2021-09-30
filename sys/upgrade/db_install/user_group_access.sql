@@ -4,11 +4,11 @@ CREATE TABLE IF NOT EXISTS `user_group_access` (
   `id_access` varchar(32)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
 INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (2, 'adm_info'),
 (2, 'adm_panel_show'),
 (2, 'adm_ref'),
-(2, 'adm_set_chat'),
 (2, 'adm_show_adm'),
 (2, 'adm_statistic'),
 (2, 'user_ban_set'),
@@ -33,21 +33,18 @@ INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (5, 'adm_info'),
 (5, 'adm_panel_show'),
 (5, 'adm_ref'),
-(5, 'adm_set_foto'),
 (5, 'adm_statistic'),
 (5, 'user_ban_set_h'),
 (5, 'user_prof_edit'),
 (6, 'adm_banlist'),
 (6, 'adm_info'),
 (6, 'adm_panel_show'),
-(6, 'adm_set_foto'),
 (6, 'adm_show_adm'),
 (6, 'adm_statistic'),
 (6, 'user_ban_set_h'),
 (6, 'user_show_ua'),
 (7, 'adm_banlist'),
 (7, 'adm_panel_show'),
-(7, 'adm_set_foto'),
 (7, 'adm_statistic'),
 (7, 'user_ban_set'),
 (7, 'user_ban_set_h'),
@@ -62,7 +59,6 @@ INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (8, 'adm_news'),
 (8, 'adm_panel_show'),
 (8, 'adm_ref'),
-(8, 'adm_set_foto'),
 (8, 'adm_show_adm'),
 (8, 'adm_statistic'),
 (8, 'user_ban_set'),
@@ -83,7 +79,6 @@ INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (9, 'adm_log_read'),
 (9, 'adm_panel_show'),
 (9, 'adm_ref'),
-(9, 'adm_set_foto'),
 (9, 'adm_set_sys'),
 (9, 'adm_set_user'),
 (9, 'adm_show_adm'),
@@ -118,20 +113,20 @@ INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (15, 'adm_accesses'),
 (15, 'adm_banlist'),
 (15, 'adm_ban_ip'),
+(15, 'adm_forum_sinc'),
 (15, 'adm_info'),
 (15, 'adm_ip_edit'),
 (15, 'adm_log_delete'),
 (15, 'adm_log_read'),
-(15, 'adm_menu'),
 (15, 'adm_mysql'),
 (15, 'adm_panel_show'),
 (15, 'adm_ref'),
-(15, 'adm_set_foto'),
 (15, 'adm_set_sys'),
 (15, 'adm_set_user'),
 (15, 'adm_show_adm'),
 (15, 'adm_statistic'),
 (15, 'adm_themes'),
+(15, 'guest_show_ip'),
 (15, 'plugins'),
 (15, 'update_core'),
 (15, 'user_ban_set'),
@@ -146,6 +141,7 @@ INSERT INTO `user_group_access` (`id_group`, `id_access`) VALUES
 (15, 'user_show_add_info'),
 (15, 'user_show_ip'),
 (15, 'user_show_ua');
+
 
 ALTER TABLE `user_group_access`
   ADD KEY `id_group` (`id_group`,`id_access`);
