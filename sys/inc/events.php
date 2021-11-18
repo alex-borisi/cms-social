@@ -86,6 +86,9 @@ add_event('ds_init', 'ds_seacrh_init');
 // Чистка вложений при удалении файла
 add_event('ds_file_deleted', 'clear_object_attachments', 1, 10); 
 
+// Инициализация прав доступа пользователя
+add_event('ds_plugins_loaded', 'setup_user_access'); 
+
 ds_rewrite_rule('search\/', H.'pages/search.php');
 ds_rewrite_rule('exit\.php', 'ds_user_logout'); 
 ds_rewrite_rule('(.*)\.php', H.'pages/$1.php');

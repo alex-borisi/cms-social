@@ -212,26 +212,139 @@ function user_collision($massive, $im = 0)
     return $massive;
 }
 
+/**
+ * Регистрирует роль пользователя
+ * */ 
+function register_user_role($uid, $title, $level) 
+{
+    $user_roles = ds_get('user_roles', array()); 
+
+    if (!isset($user_roles[$uid])) {
+        $user_roles[$uid] = array(
+            'title' => $title, 
+            'level' => $level, 
+        ); 
+    }
+
+    ds_set('user_roles', $user_roles); 
+}
+
+/**
+ * Регистрирует уровни доступа
+ * */ 
+function register_user_access($uid, $title) 
+{
+    $all_accesses = ds_get('all_accesses', array()); 
+
+    if (!isset($all_accesses[$uid])) {
+        $all_accesses[$uid] = $title; 
+    }
+
+    ds_set('all_accesses', $all_accesses); 
+}
+
+/**
+ * Инициализирует группы доступа
+ * */
+function setup_user_access() 
+{
+    $roles = array(
+        1  => array('level' => 0,  'title' => __('Пользователь')), 
+        7  => array('level' => 2,  'title' => __('Модератор')), 
+        8  => array('level' => 3,  'title' => __('Администратор')), 
+        9  => array('level' => 9,  'title' => __('Главный администратор')), 
+        15 => array('level' => 10, 'title' => __('Создатель')), 
+    ); 
+    
+    ds_set('user_roles', $roles);
+
+    /**
+     * Хук-событие для регистрации новых ролей пользователя
+     * */
+    do_event('register_user_access', $roles); 
+
+    $default = array(
+        'adm_panel_show'     => __('Админка - Главная'),
+        'adm_users_list'     => __('Админка - Список пользователей'),
+        'adm_accesses'       => __('Админка - Группы пользователей'),
+        'adm_set_sys'        => __('Админка - Настройки системы'),
+        'adm_themes'         => __('Админка - Темы оформления'),
+        'plugins'            => __('Админка - Плагины'), 
+        'update_core'        => __('Админка - Центр обновлений'),
+        'adm_info'           => __('Админка - Общая информация'),
+
+        'user_files_edit'    => __('Медиафайлы - Редактирование'), 
+        'user_files_delete'  => __('Медиафайлы - Удаление'), 
+
+        'user_ban_set'       => __('Пользователи - Блокировка'),
+        'user_ban_unset'     => __('Пользователи - Снятие блокировки'),
+        
+        'user_group'         => __('Пользователи - Назначение ролей'),
+        'user_edit'          => __('Пользователи - Редактирование профиля'),
+        'user_delete'        => __('Пользователи - Удаление профиля'),
+    ); 
+
+    /**
+     * Хук-событие для регистрации новых прав доступа
+     * */
+    do_event('register_user_access', $default); 
+
+    $registered = ds_get('all_accesses', array()); 
+    $all_accesses = array_merge($default, $registered);
+
+    ds_set('all_accesses', $all_accesses);
+}
+
+/**
+ * Возвращает список зарегистрированых ролей
+ * @return array
+ * */ 
+function get_user_roles($role_id = null) {
+    $roles = ds_get('user_roles', array());
+
+    if ($role_id != null) {
+        if (isset($roles[$role_id]))
+            return $roles[$role_id]; 
+        else
+            return null; 
+    } else {
+        return $roles; 
+    }
+}
+
+/**
+ * Возвращает список всех прав доступа
+ * @return array
+ * */
+function get_user_accesses() 
+{
+    $all_accesses = ds_get('all_accesses', array()); 
+    return $all_accesses; 
+}
+
 function user_access( $access, $u_id = null, $exit = false )
 {
-    if ( $u_id == null )
+    if ($u_id == null)
         global $user;
     else
-        $user = get_user( $u_id );
-    if ( !isset( $user['group_access'] ) || $user['group_access'] == null ) {
-        if ( $exit !== false ) {
+        $user = get_user($u_id);
+
+    if (!isset( $user['group_access'] ) || $user['group_access'] == null) {
+        if ($exit !== false) {
             header( 'Location: ' . $exit );
             exit;
-        } else
+        } else {
             return false;
+        }
     }
+
     if ( $exit !== false ) {
-        if ( db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$user[group_access]' AND `id_access` = '" . my_esc( $access ) . "'") == 0 ) {
+        if (db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$user[group_access]' AND `id_access` = '" . my_esc($access) . "'") == 0) {
             header( "Location: $exit" );
             exit;
         }
     } else
-        return ( db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$user[group_access]' AND `id_access` = '" . my_esc( $access ) . "'") == 1 ? true : false );
+        return ( db::count("SELECT COUNT(*) FROM `user_group_access` WHERE `id_group` = '$user[group_access]' AND `id_access` = '" . my_esc( $access ) . "'") >= 1 ? true : false );
 }
 
 function shif( $str )
@@ -332,8 +445,11 @@ function is_user_access($access, $user_id = '')
         return false; 
     }
 
-    $is_group_access = db::count("SELECT COUNT(`id_group`) FROM `user_group_access` 
-                                WHERE `id_group` = '" . $user['group_access'] . "' AND `id_access` = '" . $access . "'"); 
+    if (!is_array($access)) {
+        $access = array($access); 
+    }
+
+    $is_group_access = db::count("SELECT COUNT(`id_group`) FROM `user_group_access` WHERE `id_group` = '" . $user['group_access'] . "' AND `id_access` IN('" . join("', '", $access) . "')"); 
 
     return ($is_group_access ? true : false);
 }
@@ -357,10 +473,10 @@ function is_auth_user($value, $password, $key = 'id')
 
     if (isset($user['id'])) {
         if (!isset($ds_users_cache[$user['group_access']])) {
-            $group_access = get_group_access($user['group_access']);
+            $group_access = get_user_roles($user['group_access']);
 
             $user['level'] = $group_access['level'];
-            $user['group_name'] = $group_access['group_name'];
+            $user['group_name'] = $group_access['title'];
 
             $ds_users_cache[$user['id']] = use_filters('ds_users_cache_add', $user); 
         }
@@ -523,17 +639,17 @@ function get_user($user_id = false)
             $ds_users[$user_id] = db::fetch("SELECT * FROM `user` WHERE `id` = '$user_id' LIMIT 1", ARRAY_A);
 
             if (isset($ds_users[$user_id]['id'])) {
-                $group_access = get_group_access($ds_users[$user_id]['group_access']);
+                $group_access = get_user_roles($ds_users[$user_id]['group_access']);
 
                 $ban = db::fetch("SELECT id FROM `ban` WHERE `user_id` = '$user_id' AND `time_until` > '" . time() . "' LIMIT 1", ARRAY_A);
                 $ds_users[$user_id]['ban'] = (isset($ban['id']) ? 1 : 0);
 
-                if ( $group_access['group_name'] == null ) {
+                if ( $group_access == null ) {
                     $ds_users[$user_id]['level']      = 0;
-                    $ds_users[$user_id]['group_name'] = 'Пользователь';
+                    $ds_users[$user_id]['group_name'] = __('Пользователь');
                 } else {
                     $ds_users[$user_id]['level']      = $group_access['level'];
-                    $ds_users[$user_id]['group_name'] = $group_access['group_name'];
+                    $ds_users[$user_id]['group_name'] = $group_access['title'];
                 }
             } else {
                 $ds_users[$user_id] = false;
@@ -583,23 +699,27 @@ function get_user_profile($user_id = null)
 }
 
 /**
-* Получает и кеширует группу пользователя
-* $group_id ID группы
-* @return array 
+* Изменяет доступ группы
 */ 
-function get_group_access($group_id) 
+function set_group_access($group_id, $access_id, $action) 
 {
-    global $ds_group_accesses; 
+    $access = db::fetch("SELECT * FROM `user_group_access` WHERE `id_group` = '" . $group_id . "' AND `id_access` = '" . $access_id . "' LIMIT 1", ARRAY_A);
 
-    if (!isset($ds_group_accesses[$group_id])) {
-        $group_access = db::fetch("SELECT `level`, `name` AS `group_name` 
-                                                        FROM `user_group` 
-                                                        WHERE `id` = '" . (int) $group_id . "' LIMIT 1", ARRAY_A);
+    if ($action == 'add') {
+        if (empty($access)) {
+            db::insert('user_group_access', [
+                'id_group' => $group_id, 
+                'id_access' => $access_id, 
+            ]);             
+        }
+    } 
 
-        $ds_group_accesses[$group_id] = $group_access;
+    elseif ($action == 'delete') {
+        db::delete('user_group_access', [
+            'id_group' => $group_id, 
+            'id_access' => $access_id, 
+        ]);   
     }
-
-    return $ds_group_accesses[$group_id]; 
 }
 
 /**
@@ -691,7 +811,7 @@ function get_user_years($ank)
         return ''; 
     }
 
-    $strings = array(__('год'), __('лет'), __('лет')); 
+    $strings = array(__('год'), __('года'), __('лет')); 
 
     $date_a = new DateTime($ank['birthdate']);
     $date_b = new DateTime();

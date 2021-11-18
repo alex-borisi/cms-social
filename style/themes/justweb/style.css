@@ -100,6 +100,16 @@ a {
     margin: 0; 
 }
 
+.input-captcha img {
+    height: 40px; 
+    width: 100px;
+}
+
+.input-captcha input[type="text"] {
+    display: inline-block;
+    width: unset; 
+}
+
 label {
     display: inline-block;
     margin: 5px 0;
