@@ -16,8 +16,16 @@ if (is_confirmed_valid('confirm', 'update')) {
 	}
 
 	elseif ($do == 'core') {
-		$archive = file_get_contents($update_info['latest']['download']); 
+		$arrContextOptions = array(
+		    'ssl' => array(
+		        'verify_peer' => false,
+		        'verify_peer_name' => false,
+		    ),
+		); 
+		
+		$archive = file_get_contents($update_info['latest']['download'], false, stream_context_create($arrContextOptions)); 
 		$archive_path = ROOTPATH . '/sys/upgrade/' . basename($update_info['latest']['download']); 
+
 		file_put_contents($archive_path, $archive);
 
 		$version_current = get_version(); 
