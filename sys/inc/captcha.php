@@ -43,7 +43,6 @@ class captcha
 
     function MultiWave( )
     {
-        include_once H . 'sys/inc/MultiWave.php';
         $this->img = MultiWave( $this->img );
     }
 
