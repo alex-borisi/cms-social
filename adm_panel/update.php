@@ -155,7 +155,7 @@ if (count($updateList['plugins']) > 0) {
 	    <div class="list-item-description"><?php echo $plugin['description']; ?></div>
 	    <div class="list-item-description">
 	    	<?php echo __('Версия: %s', $plugin['version']); ?>	| 
-	    	<?php echo __('Автор: %s', '<a href="' . $plugin['authoruri'] . '">' . $plugin['author'] . '</a>'); ?>	
+	    	<?php echo __('Автор: %s', '<a href="' . (isset($plugin['authoruri']) ? $plugin['authoruri'] : $plugin['url']) . '">' . $plugin['author'] . '</a>'); ?>	
 	    </div>
 	    <div class="list-item-action">
 	        <?php echo join(' | ', $plug_action); ?>
