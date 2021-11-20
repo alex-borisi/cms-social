@@ -100,6 +100,16 @@ a {
     margin: 0; 
 }
 
+.input-captcha img {
+    height: 40px; 
+    width: 100px;
+}
+
+.input-captcha input[type="text"] {
+    display: inline-block;
+    width: unset; 
+}
+
 label {
     display: inline-block;
     margin: 5px 0;
@@ -957,6 +967,7 @@ body.ds-page-mail .ds-messages {
     margin-top: 10px;
     word-break: break-word;
     max-width: 640px;
+    overflow: hidden;
 }
 
 .ds-output-audios .dpl {
@@ -1653,6 +1664,7 @@ form[name="message"] {
 
 .ds-editor {
     margin-bottom: 10px;
+    position: relative;
 }
 
 .ds-editor-panel {
@@ -1751,19 +1763,19 @@ form[name="message"] {
     background-color: #eaf3ff;
 }
 
-.ds-comment-form-textarea .ds-editor-smiles,
-.ds-comment-form-textarea .ds-editor-panel {
+.ds-editor .ds-editor-smiles,
+.ds-editor .ds-editor-panel {
     display: none;
 }
 
-.ds-comment-form[data-panel="bbpanel"] .ds-comment-form-textarea .ds-editor-panel  {
+.ds-editor[data-panel="bbpanel"] .ds-editor-panel  {
     display: block;
 }
-.ds-comment-form[data-panel="smiles"] .ds-comment-form-textarea .ds-editor-smiles  {
+.ds-editor[data-panel="smiles"] .ds-editor-smiles  {
     display: block;
 }
-.ds-comment-form[data-panel="smiles"] .smile-panel-toggle,
-.ds-comment-form[data-panel="bbpanel"] .bb-panel-toggle {
+.ds-editor[data-panel="smiles"] .smile-panel-toggle,
+.ds-editor[data-panel="bbpanel"] .bb-panel-toggle {
     opacity: .4;
 }
 
@@ -2102,6 +2114,11 @@ form[name="message"] {
 .box-group-block {
     display: block;
     padding: 10px;
+}
+
+.box-group-block img {
+    max-width: 100%; 
+    max-height: 1000px;
 }
 
 .ds-image-preview {
@@ -2929,5 +2946,9 @@ form.ds-reg-form {
 
     .ds-output-audios .dpl {
         width: 400px;
+    }
+
+    .ds-editor-textarea {
+        padding-right: 90px;
     }
 }

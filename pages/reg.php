@@ -23,7 +23,7 @@ if (isset($_GET['id']) && isset($_GET['hash'])) {
         $_SESSION['message'] = __('Вы успешно подтвердили свой E-Mail');
         $redirect_url = use_filters('ds_email_confirm_redirect', get_user_url($ank)); 
 
-        ds_redirect($redirect_url);
+        ds_redirect($redirect_url); 
     } else {
         add_error(__('Ошибка при подтверждении E-Mail')); 
     }
@@ -108,6 +108,12 @@ if (isset($_POST['reg'])) {
         if (empty($reg['email'])) {
             add_error(__('Вы не указали E-Mail адрес')); 
         }    
+    }
+
+    if (use_filters('ds_reg_field_submit', true)) {
+        if ($_SESSION['captcha'] != $_POST['captcha']) {
+            add_error(__('Неправильный код с картинки')); 
+        }        
     }
 
     if ($reg['email']) {
@@ -251,6 +257,14 @@ $time_resent = (60 * 5) - (time() - $time_sent);
     <div class="ds-reg-input ds-reg-input-gender">
         <div><input id="gender_man" type="radio" name="gender" value="1" <?php echo (isset($reg['pol']) && $reg['pol'] == 1 ? 'checked' : (!isset($reg['pol']) ? 'checked' : '')); ?> /><label for="gender_man"><?php echo __('Мужской'); ?></label></div>
         <div><input id="gender_woman" type="radio" name="gender" value="0" <?php echo (isset($reg['pol']) && $reg['pol'] == 0 ? 'checked' : ''); ?> /><label for="gender_woman"><?php echo __('Женский'); ?></label></div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (use_filters('ds_reg_field_captcha', true)) : ?>
+    <div class="ds-reg-input ds-reg-input-captcha">
+        <label for="captcha"><?php echo __('Код с картинки'); ?></label>
+        <img src="<?php echo get_site_url('/captcha.php?v=' . time()); ?>" alt="Captcha" onclick="(function(e){e.src=e.src.replace(/v=([0-9]+)/g,'v=' + Date.now())}(this))" />
+        <input id="captcha" type="text" name="captcha" value="" autocomplete="off" />
     </div>
     <?php endif; ?>
 

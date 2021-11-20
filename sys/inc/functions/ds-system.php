@@ -10,7 +10,6 @@ function get_language()
     return $language; 
 } 
 
-
 function get_version() 
 {
     require ROOTPATH . '/sys/inc/version.php';
@@ -682,4 +681,33 @@ function ds_seacrh_init()
     foreach($default AS $uid => $args) {
         ds_register_search($uid, $args); 
     }
+}
+
+
+/**
+* Добавляет строку в лог файл
+* */
+
+function add_log($str, $type = 'message') 
+{
+    $log = ROOTPATH . '/sys/tmp/system-log.txt'; 
+
+    if (!is_file($log)) {
+        file_put_contents($log, ''); 
+    }
+
+    if (is_writable($log)) {
+        if (!$handle = fopen($log, 'a')) {
+            return false; 
+        }
+
+        if (fwrite($handle, '['.$type.'] ' . date('Y-m-d H:i:s') . ' "' . $str . "\"\n") === FALSE) {
+            return false; 
+        }
+
+        fclose($handle);
+        return true; 
+    }
+
+    return false; 
 }

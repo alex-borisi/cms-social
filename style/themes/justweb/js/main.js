@@ -4,6 +4,7 @@ var ds_audio = new Audio();
 var ds_playlist = {}
 var ds_smiles = null; 
 var ds_loading = true; 
+var is_scrolling = false; 
 
 var eventAudio = new Audio(); 
 function playAudioMessage(name) {
@@ -53,11 +54,14 @@ function swiperEvent(type, callback)
 	});
 
 	window.addEventListener('touchend', function(e) {
+		if (is_scrolling !== false) 
+			return ;
+		
 		let end = e.changedTouches[0]; 
 		let diffX = Math.abs(start.pageX - end.pageX); 
 		let diffY = Math.abs(start.pageY - end.pageY); 
 
-		if (diffX >= 80 && diffY <= 40) {
+		if (diffX >= 120 && diffY <= 30) {
 			if (type == 'left' && start.pageX < end.pageX) {
 				callback(); 
 			} else if (type == 'right' && start.pageX > end.pageX) {
@@ -450,13 +454,13 @@ jQuery(function($) {
 
 	$(document).on('click', '[data-toggle]', function(e) {
 		var uid = $(this).attr('data-toggle'); 
-		var current = $(this).closest('.ds-comment-form').attr('data-panel');
+		var current = $(this).closest('.ds-editor').attr('data-panel');
 
 		if (current == uid) {
 			uid = ''; 
 		}
 
-		$(this).closest('.ds-comment-form').attr('data-panel', uid);
+		$(this).closest('.ds-editor').attr('data-panel', uid);
 	});
 
 	$(document).on('click', '.mobile-sidebar-toggle', function(e) {
@@ -516,6 +520,13 @@ jQuery(function($) {
 				}
 			}
 		});
+	});
+
+	$('[data-scroll]').scroll(function() {
+	    clearTimeout(is_scrolling); 
+	    is_scrolling = setTimeout(function() {
+	    	is_scrolling = false; 
+	    }, 300); 
 	});
 
 	var inProgress = false; 

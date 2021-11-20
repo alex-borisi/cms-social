@@ -1,8 +1,8 @@
-# CMS-Social v3.0.9 alpha
+# CMS-Social v3.1.0 alpha
 
 ## Системные требования 
 
-- PHP >= 7.4
+- PHP >= 7.4 (рекомендуемая версия >= 8.0)
   - curl
   - mcrypt
   - gd
