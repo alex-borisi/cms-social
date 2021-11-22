@@ -173,6 +173,17 @@ $set = get_system();
 // Событие после инициализации настроек системы
 do_event('ds_settings_init', $set); 
 
+// Перенаправление с http на https
+if (isset($set['https']) && $set['https'] == 1) {
+    if ($_SERVER['HTTP_HOST'] != 'localhost' && 
+        !(($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || 
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')))
+    {
+       $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+       ds_redirect($redirect, 301);
+    }
+}
+
 if ($set['show_err_php']) {
     error_reporting(E_ALL); 
     ini_set('display_errors', true); 
@@ -273,9 +284,9 @@ elseif (isset($_SERVER["HTTP_USER_AGENT"]) && (preg_match('#windows#i', $_SERVER
         preg_match('#linux#i', $_SERVER["HTTP_USER_AGENT"]) || preg_match('#bsd#i', $_SERVER["HTTP_USER_AGENT"]) || 
         preg_match('#x11#i', $_SERVER["HTTP_USER_AGENT"]) || preg_match('#unix#i', $_SERVER["HTTP_USER_AGENT"]) || 
         preg_match('#macos#i', $_SERVER["HTTP_USER_AGENT"]) ||preg_match('#macintosh#i', $_SERVER["HTTP_USER_AGENT"])))
-$webbrowser = true;
+    $webbrowser = true;
 else 
-$webbrowser = false;
+    $webbrowser = false;
 
 
 $ipa = false;
