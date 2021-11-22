@@ -408,12 +408,12 @@ function ds_admin_settings_load()
     )); 
 
     add_settings_field('general', 'settings_general', array(
-        'title' => __('Анти-Dos'), 
-        'name' => 'antidos', 
+        'title' => __('Перенаправлять HTTP-запросы в HTTPS'), 
+        'name' => 'https', 
         'type' => 'checkbox', 
         'value' => 1, 
         'checked' => '%value', 
-        'description' => '* Анти-Dos - защита от частых запросов с одного IP-адреса', 
+        'description' => '* Автоматически перенаправлять HTTP-запросы к WWW-домену в безопасное HTTPS-соединение', 
     )); 
 
     add_settings_field('general', 'settings_general', array(
