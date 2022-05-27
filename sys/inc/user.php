@@ -1,7 +1,10 @@
 <?php
 
+libload('Mobile_Detect.php'); 
+$detect = new Mobile_Detect;
+
 if (!isset($_SERVER['HTTP_REFERER'])) {
-   $_SERVER['HTTP_REFERER'] = '/index.php'; 
+   $_SERVER['HTTP_REFERER'] = '/?sid=' . time(); 
 }
 
 // если аккаунт не активирован
@@ -28,9 +31,9 @@ if (isset($user)) {
 
 	// Записываем url 
 	add_user_update('url', $_SERVER['SCRIPT_NAME']); 
-	
+
 	// Тип браузера
-	add_user_update('browser', ($webbrowser == true ? "web" : "wap")); 
+	add_user_update('browser', ($detect->isMobile() == true ? "mobile" : "desktop")); 
 
 	// Пишем ip пользователя
 	if (isset($ip2['add']))add_user_update('ip', ip2long($ip2['add'])); 

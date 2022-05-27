@@ -1,10 +1,10 @@
-﻿<?php 
+<?php 
 
 if (is_ajax()) {
     ?>
     <script>
     if (window.jQuery.fn.ajaxpage === undefined) {
-        window.location.reload(true); 
+        window.location.reload(true);  
     }
     </script>
     <div id="ajax-meta" style="display: none;" data-title="<?php ds_document_title(); ?>" data-body="<?php echo join(' ', get_body_class()); ?>" data-message="<?php echo (!empty($_SESSION['message']) ? $_SESSION['message'] : ''); ?>"></div>

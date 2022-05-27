@@ -155,6 +155,11 @@ body {
     background-color: #213346;
 }
 
+.header-player-toggle:hover, 
+.ds-actions a:hover {
+	background-color: #1d2c3e;
+}
+
 .header-music .dpl-toggle {
 	color: #93a2c0;
     background-color: #25303c;
@@ -211,8 +216,8 @@ body {
 	color: #668097;
 }
 
+.list-empty, 
 .ds-profile-avatar, .ds-profile-title, 
-.empty, 
 .admin_menu, 
 .mess, 
 .foot, 
@@ -309,6 +314,13 @@ form.ds-reg-form {
 
 .ds-editor-smiles::before {
 	border-top-color: #25303c;
+}
+
+.empty p {
+	color: #c1c1c1;
+}
+.empty::before {
+	background-color: #3c5166;
 }
 
 @media (max-width: 767px) {

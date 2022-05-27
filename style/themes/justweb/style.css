@@ -1141,7 +1141,6 @@ body.ds-page-mail .ds-messages {
 
 .ds-profile-avatar, 
 .ds-profile-title, 
-.empty, 
 .admin_menu,
 .mess, 
 .foot, 
@@ -1276,8 +1275,8 @@ form .main {
     background-color: orange;
 }
 
-.wrapper-avatar-thumbnail[data-active="out"][data-browser="wap"]::before,
-.wrapper-avatar-thumbnail[data-active="on"][data-browser="wap"]::before {
+.wrapper-avatar-thumbnail[data-active="out"][data-browser="mobile"]::before,
+.wrapper-avatar-thumbnail[data-active="on"][data-browser="mobile"]::before {
     background-color: #ffffff;
     background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%227%22%20height%3D%2211%22%3E%3Cpath%20fill%3D%22%234bb34b%22%20fill-rule%3D%22evenodd%22%20d%3D%22M0%201.5C0%20.7.7%200%201.5%200h4C6.3%200%207%20.7%207%201.5v8c0%20.8-.7%201.5-1.5%201.5h-4A1.5%201.5%200%20010%209.5v-8zM1%202h5v6H1V2z%22%2F%3E%3C%2Fsvg%3E);
     width: 7px;
@@ -1285,7 +1284,7 @@ form .main {
     border-radius: 3px;
 }
 
-.wrapper-avatar-thumbnail[data-active="out"][data-browser="wap"]::before {
+.wrapper-avatar-thumbnail[data-active="out"][data-browser="mobile"]::before {
     background-image: url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%227%22%20height%3D%2211%22%3E%3Cpath%20fill%3D%22orange%22%20fill-rule%3D%22evenodd%22%20d%3D%22M0%201.5C0%20.7.7%200%201.5%200h4C6.3%200%207%20.7%207%201.5v8c0%20.8-.7%201.5-1.5%201.5h-4A1.5%201.5%200%20010%209.5v-8zM1%202h5v6H1V2z%22%2F%3E%3C%2Fsvg%3E); 
 }
 
@@ -2547,8 +2546,45 @@ form.ds-reg-form {
     min-height: 60px; 
 }
 
-.ds-comments {
+.empty {
+    text-align: center;
+    padding: 70px 0;
+}
+.empty p {
+    color: #646464;
+    max-width: 500px;
+    word-break: break-word;
+    margin: 20px auto;
+}
 
+.empty::before {
+    display: block;
+    width: 100px;
+    height: 100px;
+    content: '';
+    margin: 0 auto;
+    background-color: #f4f6f8;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #8acbf1;
+    font-family: Flaticon;
+    line-height: 100px;
+}
+
+.empty-notify::before {
+    content: "\f1a0";
+}
+.empty-feed::before {
+    content: "\f149";
+}
+.empty-mail::before {
+    content: "\f19e";
+}
+.empty-widget::before {
+    content: "\f13b";
+}
+.empty-friends::before {
+    content: "\f160";
 }
 
 .ds-comment {

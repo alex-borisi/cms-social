@@ -132,16 +132,20 @@ function do_widgets($uid)
 	if (isset($area['id'])) {
 		$widgets = get_widgets($area['id']); 
 
-		foreach($widgets AS $item) {
-			if (class_exists($item['id'])) {
-				$className = $item['id']; 
-				$widget = new $className(); 
+		if ($widgets) {
+			foreach($widgets AS $item) {
+				if (class_exists($item['id'])) {
+					$className = $item['id']; 
+					$widget = new $className(); 
 
-				if (isset($item['widget_id']))
-					$widget->setup($item['widget_id']); 
+					if (isset($item['widget_id']))
+						$widget->setup($item['widget_id']); 
 
-				echo $widget->widget($widget->instance); 
-			}
+					echo $widget->widget($widget->instance); 
+				}
+			}			
+		} else {
+			do_event('widgets_' . $uid . '_empty');
 		}
 	}
 }

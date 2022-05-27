@@ -277,19 +277,7 @@ if (!defined('SUPPORT_WIDGETS') || SUPPORT_WIDGETS == true) {
     do_event('ds_register_widgets'); 
 }
 
-if (isset($_SERVER["HTTP_USER_AGENT"]) && preg_match('#up-browser|blackberry|windows ce|symbian|palm|nokia|obile#i', $_SERVER["HTTP_USER_AGENT"]))
-$webbrowser = false;
-
-elseif (isset($_SERVER["HTTP_USER_AGENT"]) && (preg_match('#windows#i', $_SERVER["HTTP_USER_AGENT"]) || 
-        preg_match('#linux#i', $_SERVER["HTTP_USER_AGENT"]) || preg_match('#bsd#i', $_SERVER["HTTP_USER_AGENT"]) || 
-        preg_match('#x11#i', $_SERVER["HTTP_USER_AGENT"]) || preg_match('#unix#i', $_SERVER["HTTP_USER_AGENT"]) || 
-        preg_match('#macos#i', $_SERVER["HTTP_USER_AGENT"]) ||preg_match('#macintosh#i', $_SERVER["HTTP_USER_AGENT"])))
-    $webbrowser = true;
-else 
-    $webbrowser = false;
-
-
-$ipa = false;
+$ipa = array();
 if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']!='127.0.0.1' && preg_match("#^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$#",$_SERVER['HTTP_X_FORWARDED_FOR']))
 {
 	$ip2['xff'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -314,7 +302,7 @@ if (isset($_SERVER['HTTP_USER_AGENT']))
 	$ua = $_SERVER['HTTP_USER_AGENT'];
 	$ua = strtok($ua, '/');
 	$ua = strtok($ua, '('); // оставляем только то, что до скобки
-	$ua = preg_replace('#[^a-z_\./ 0-9\-]#iu', null, $ua); // вырезаем все "левые" символы
+	$ua = preg_replace('#[^a-z_\./ 0-9\-]#iu', '', $ua); // вырезаем все "левые" символы
 
 	// Опера мини тоже посылает данные о телефоне :)
 	if (isset($_SERVER['HTTP_X_OPERAMINI_PHONE_UA']) && preg_match('#Opera#i',$ua))
@@ -322,7 +310,7 @@ if (isset($_SERVER['HTTP_USER_AGENT']))
 		$ua_om = $_SERVER['HTTP_X_OPERAMINI_PHONE_UA'];
 		$ua_om = strtok($ua_om, '/');
 		$ua_om = strtok($ua_om, '(');
-		$ua_om = preg_replace('#[^a-z_\. 0-9\-]#iu', null, $ua_om);
+		$ua_om = preg_replace('#[^a-z_\. 0-9\-]#iu', '', $ua_om);
 		$ua = 'Opera Mini ('.$ua_om.')';
 	}
 }

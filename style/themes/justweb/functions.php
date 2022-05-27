@@ -499,7 +499,7 @@ function justweb_comment_posted_json($post_id, $object_type, $object_id)
 	$post = db::fetch("SELECT * FROM `" . $comment_table . "` WHERE id = '" . $post_id . "' LIMIT 1"); 
 
 	$args = array(
-		'classes' => 'comment-' . $post['id'], 
+		'classes' => 'ds-messages-item comment comment-' . $post['id'], 
 		'image' => get_avatar($post['user_id']), 
 		'title' => '<a href="' . get_user_url($post['user_id']) . '">' . get_user_nick($post['user_id']) . '</a>', 
 		'time' => vremja($post['time']), 

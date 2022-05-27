@@ -49,9 +49,22 @@ class Install
 		}
 	}
 
+	public function get_exists_tables() {
+		$q = db::query('SHOW TABLES');
+
+		$exists_tables = []; 
+		while ($tables = $q->fetch_assoc()) {
+			$table = array_values($tables); 
+			$exists_tables[] = $table[0]; 
+		}
+
+		return $exists_tables; 
+	}
+
 	public function check_sql_install() 
 	{
 		$path_sql = ROOTPATH . '/sys/upgrade/db_install'; 
+		$exists = (isset($_POST['dbexists']) ? $_POST['dbexists'] : 'continue');
 
 		if (!is_dir($path_sql)) {
 			$this->errors[] = __('Папка с SQL файлами не найдена!'); 
@@ -69,27 +82,38 @@ class Install
 
 		$k_sql = 0; 
 		$ok_sql = 0; 
+		$rm_sql = 0; 
 		
 		while ($filetables = readdir($opdirtables))
 		{
-			if (preg_match('#\.sql$#i',$filetables)) {
-				$table_name = preg_replace('#\.sql$#i', null, $filetables);
+			if (preg_match('#\.sql$#i', $filetables)) {
+				$table_name = preg_replace('#\.sql$#i', '', $filetables);
 				$sql = SQLParser::getQueriesFromFile($path_sql . '/' . $filetables);
-
+				
 				$continue = false; 
-				if (isset($_ver_table[$table_name])) {
-					$continue = true; 
-				}
 
-				for ($i = 0; $i < count($sql); $i++)
-				{
+				if (isset($_ver_table[$table_name])) {
+					if ($exists == 'clear') {
+						$rm_sql++; 
+						db::query("DROP TABLE `$table_name`");
+					} else {
+						$continue = true; 
+					}
+				}	
+
+				for ($i = 0; $i < count($sql); $i++) {
 					$k_sql++; 
 
-					if ($continue === false && db::query($sql[$i])) {
+					if ($continue === false) {
+						db::query($sql[$i]);
 						$ok_sql++; 
 					}
 				}
 			}
+		}
+
+		if ($rm_sql) {
+			$this->messages[] = __('Удалено %s существующих таблиц', $rm_sql); 
 		}
 
 		$this->messages[] = __('Выполнено %s из %s запросов', $ok_sql, $k_sql); 
@@ -175,16 +199,22 @@ class Install
 			if (mysqli_connect_errno()) {
 				$this->errors[] = __('Не удалось подключиться к базе данных') . "<br />" . mysqli_connect_error(); 
 			} else {
-				$this->check_sql_install();
+				$tables = $this->get_exists_tables(); 
 
-				if (!file_put_contents(ROOTPATH.'/config.php', $this->get_data_config())) {
-					$this->errors[] = __('Не удалось создать конфигурационный файл'); 
-					return false; 
+				if (count($tables) == 0 || isset($_POST['dbexists'])) {
+					$this->check_sql_install();
+
+					if (!file_put_contents(ROOTPATH.'/config.php', $this->get_data_config())) {
+						$this->errors[] = __('Не удалось создать конфигурационный файл'); 
+						return false; 
+					} else {
+						$set = get_settings();  
+						save_settings($set, $type = 'autoload'); 
+					}
+					return true;					
 				} else {
-					$set = get_settings();  
-					save_settings($set, $type = 'autoload'); 
+					$this->errors['tables_exists'] = __('В базе данных найдены существующие таблицы'); 
 				}
-				return true;
 			}
 			ob_clean(); 
 		}
@@ -293,12 +323,16 @@ class Install
 
 					$input['value'] = $this->get_value($input['key'], $input['value']);  
 
-					if (isset($input['title']) && $input['title']) {
-						echo '<div class="form-title">'  .$input['title'] . '</div>'; 
-					}
-
 					if (preg_match('/^(text|hidden|password|email|tel)$/', $input['type'])) {
-						echo '<div class="form-input form-type-' . $input['type'] . '"><input type="'  .$input['type'] . '" name="'  . $input['key'] . '" value="' . $input['value'] . '" /></div>'; 
+						if (isset($input['title']) && $input['title']) {
+							echo '<label for="field-'.$input['key'].'" class="form-title">'  .$input['title'] . '</label>'; 
+						}
+
+						echo '<div class="form-input form-type-' . $input['type'] . '"><input id="field-'.$input['key'].'" type="'  .$input['type'] . '" name="'  . $input['key'] . '" value="' . $input['value'] . '" /></div>'; 					
+					} elseif ($input['type'] == 'checkbox') {
+						echo '<label class="form-input form-type-' . $input['type'] . '"><input id="field-'.$input['key'].'" type="'  .$input['type'] . '" name="'  . $input['key'] . '" value="' . $input['value'] . '" /> '  .$input['title'] . '</label>'; 		
+					} elseif ($input['type'] == 'radio') {
+						echo '<label class="form-input form-type-' . $input['type'] . '"><input id="field-'.$input['key'].'" type="'  .$input['type'] . '" name="'  . $input['key'] . '" value="' . $input['value'] . '" /> '  .$input['title'] . '</label>'; 		
 					}
 
 					if (isset($input['description']) && $input['description']) {
@@ -324,20 +358,23 @@ class Install
 				'title' => __('Имя базы данных'), 
 				'key' => 'dbname', 
 				'description' => __('Укажите название базы данных'), 
+				'value' => (isset($_POST['dbname']) ? text($_POST['dbname']) : ''),
 			), 
 			array(
 				'title' => __('Имя пользователя'), 
 				'key' => 'dbuser', 
+				'value' => (isset($_POST['dbuser']) ? text($_POST['dbuser']) : ''),
 			), 
 			array(
 				'title' => __('Пароль'), 
 				'key' => 'dbpass', 
 				'type' => 'password', 
+				'value' => (isset($_POST['dbpass']) ? text($_POST['dbpass']) : ''),
 			), 
 			array(
 				'title' => __('Сервер базы данных'), 
 				'key' => 'dbhost', 
-				'value' => 'localhost', 
+				'value' => (isset($_POST['dbhost']) ? text($_POST['dbhost']) : 'localhost'),
 			), 
 			array(
 				'key' => 'step', 
@@ -345,6 +382,25 @@ class Install
 				'value' => 'database', 
 			), 
 		); 
+
+		if (isset($this->errors['tables_exists'])) {
+			array_push($inputs[1]['items'], array(
+				'title' => __('Новая установка'), 
+				'key' => 'dbexists', 
+				'type' => 'radio', 
+				'value' => 'clear',
+				'checked' => true, 
+				'description' => __('Все существующие таблицы системы, будут удалены.'), 
+			)); 
+			array_push($inputs[1]['items'], array(
+				'title' => __('Сохранение данных'), 
+				'key' => 'dbexists', 
+				'type' => 'radio', 
+				'value' => 'continue',
+				'checked' => false, 
+				'description' => __('Пропустить существующие таблицы, установить только если есть новые.'), 
+			)); 
+		}
 
 		$inputs[2]['title'] = __('Регистрация администратора'); 
 		$inputs[2]['submit'] = __('Зарегистрироваться'); 
@@ -398,7 +454,7 @@ class Install
 			<script id="jquery" type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
 			</head><body><div class="document">'; 
 
-		echo '<div class="logo"><a href="https://cms-social.ru" target="_blank"><img src="' . get_site_url('/sys/static/images/logo.png') . '" alt="Logo" /></a></div>';
+		echo '<div class="logo"><a href="https://cms-social.ru" target="_blank"><img src="' . get_site_url('/sys/static/svg/logo.svg') . '" alt="Logo" /></a></div>';
 	}
 
 	public function get_footer() 

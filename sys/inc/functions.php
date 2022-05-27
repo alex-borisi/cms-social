@@ -109,7 +109,7 @@ function include_deprecated($file, $version)
 /**
 * Функция кеширует инклуды в файл, с интервалом обновления заданным в настройках системы
 */ 
-function add_includes_cache($includes, $dir_files = '', $cache_name) 
+function add_includes_cache($includes, $dir_files = '', $cache_name = '') 
 {
     $path_tmp_includes = ROOTPATH . '/sys/tmp/' . $cache_name . '.cache.php'; 
     $includes = use_filters('ds_includes_cache_array', $includes); 

@@ -207,7 +207,7 @@ function add_feed_photos($file, $term)
 
 		    add_object_attachments($file['id'], array(
 	            'object' => 'feed', 
-	            'object_id' => $feed_id, 
+	            'object_id' => $feed['id'], 
 	        )); 
 
 			update_user_feed($feed['id'], $photos); 
@@ -229,6 +229,7 @@ function add_feed_photos($file, $term)
 function add_feed_music($file, $term) 
 {
 	$feed = db::fetch("SELECT * FROM `feeds` WHERE `slug` = 'ds_music' AND `object_id` = '" . $term['term_id'] . "' AND `time_create` >= '" . (time() - 3600) . "' ORDER BY id DESC LIMIT 1"); 
+	
 	if (isset($feed['id'])) {
 		$music = unserialize($feed['content']); 
 
@@ -237,7 +238,7 @@ function add_feed_music($file, $term)
 
 		    add_object_attachments($file['id'], array(
 	            'object' => 'feed', 
-	            'object_id' => $feed_id, 
+	            'object_id' => $feed['id'], 
 	        )); 
 
 			update_user_feed($feed['id'], $music); 

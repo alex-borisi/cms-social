@@ -41,8 +41,9 @@ $start  = $set['p_str'] * $page - $set['p_str'];
 $q      = db::query("SELECT * FROM `notification` WHERE `user_id` = '" . $user['id'] . "' AND `type` IN('" . join("', '", array_keys($notify_types)) . "') ORDER BY `time` DESC LIMIT $start, $set[p_str]");
 
 if ( $k_post == 0 ) {
-    echo '<div class="empty">';
-    echo __('Список уведомлений пуст');
+    echo '<div class="empty empty-notify">';
+    echo '<h2>' . __('Список уведомлений пуст') . '</h2>';
+    echo '<p>' . __('Похоже, у вас еще нет уведомлений. Здесь будут отображаться все уведомления об ответах на ваши сообщения, завках в друзья и т.д.') . '</p>';
     echo '</div>';
 } else {
 	echo '<div class="ds-notify">'; 

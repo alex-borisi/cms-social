@@ -96,7 +96,9 @@ class DB_Feeds
 				$ids[] = $item['id']; 
 			}
 
-			$likes = db::get_var("SELECT `object_id` FROM `feeds_likes` WHERE `user_id` = '" . $user_id . "' AND `object_id` IN(" . join(',', $ids) . ")", true); 
+			if ($ids) {
+				$likes = db::get_var("SELECT `object_id` FROM `feeds_likes` WHERE `user_id` = '" . $user_id . "' AND `object_id` IN(" . join(',', $ids) . ")", true); 
+			}
 		}
 
 		foreach($items AS $key => $value) {

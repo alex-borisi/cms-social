@@ -10,8 +10,9 @@ body * {
 }
 
 .alert {
-	padding: 10px; 
-	border-radius: 5px; 
+    padding: 0 10px;
+    border-radius: 5px;
+    margin: 10px 0;
 }
 
 .alert-error {
@@ -81,20 +82,21 @@ form {
 }
 
 .form-buttons button {
-	padding: 7px 10px;
-    border: 1px solid #bdbdbd;
+    padding: 10px 20px;
+    border: unset;
     color: gray;
     background-color: white;
     border-radius: 3px;
-    box-shadow: 0px 0px 5px inset #e0e0e0;
     cursor: pointer;
 }
 
+.form-buttons button:hover {
+	opacity: .9;
+}
+
 .form-buttons button.btn.btn-next {
-	background-color: #2788d6;
+    background-color: #00a1de;
     color: #fff;
-    border-color: #3290e6;
-    box-shadow: 0px 0px 5px inset #63bdf1;
 }
 
 .form-input input[type="text"],

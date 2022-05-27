@@ -50,8 +50,16 @@ class Widget_Feed extends Widget
 			); 
 
 			$query = new DB_Feeds($args); 
-			foreach($query->items AS $feed) {
-				ds_output_feed($feed); 
+
+			if ($query->items) {
+				foreach($query->items AS $feed) {
+					ds_output_feed($feed); 
+				}				
+			} else {
+			    echo '<div class="empty empty-feed">';
+			    echo '<h2>' . __('Лента событий пуста') . '</h2>';
+			    echo '<p>' . __('Похоже, в вашей ленте пока нет новых событий. Здесь будут отображаться все публикации людей, на которых вы подписаны.') . '</p>';
+			    echo '</div>';
 			}
 			?>
 			</div>
