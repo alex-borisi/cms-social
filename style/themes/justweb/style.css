@@ -348,9 +348,11 @@ div:hover::-webkit-scrollbar-thumb {
 }
 .header-search input[type="search"] {
     width: 100%;
-    padding: 10px 0;
-    border: 0;
-    border-bottom: 1px solid #efefef;
+    background-color: #f4f6f8;
+    padding: 8px 10px;
+    border: 1px solid #efefef;
+    border-radius: 6px;
+    max-width: 240px;
 }
 
 .header-people {
@@ -480,7 +482,7 @@ div:hover::-webkit-scrollbar-thumb {
 .music_playlist {
     overflow: auto;
     background-color: #ffffff;
-    padding: 8px;
+    padding: 10px;
     flex: 1; 
 }
 

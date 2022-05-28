@@ -600,3 +600,15 @@ add_event('ds_editor_textarea_after', 'justweb_bbpanel_toggle', 10, 1);
 function justweb_bbpanel_toggle($before) {
 	return '<div class="textarea-panel"><span class="bb-panel-toggle" data-toggle="bbpanel"><i class="fa fa-font"></i></span> <span data-toggle="smiles" class="smile-panel-toggle"><i class="fa fa-smile-o"></i></span></div>' . $before; 
 }
+
+
+add_event('widgets_home_empty', 'justweb_widgets_home_empty'); 
+function justweb_widgets_home_empty() {
+    echo '<div class="empty empty-widget">';
+    echo '<h2>' . __('Виджеты не настроены') . '</h2>';
+    echo '<p>' . __('Похоже, главная страница ещё не настроена.') . '</p>';
+    if (is_user_access('adm_themes')) {
+    	echo '<a class="button button-primary" href="' . get_site_url('/adm_panel/widgets.php?slug=home&action=editor') . '">Управление виджетами</a>'; 
+    }
+    echo '</div>';
+}

@@ -82,25 +82,63 @@ do_event('ds_friends_output', $query, $uid, $section);
 $template_list = use_filters('ds_friends_template_list_item', '<div class="%class_list%"><a class="%class_list%-link" href="%link%">%thumbnail% <span class="%class_list%-title">%title%</span></a></div>');
 $template_box = use_filters('ds_friends_template_list', '<div class="list list-friends">%content%</div>'); 
 
-$content = ''; 
-foreach($query->items AS $friend_id) {
-	$ank = get_user($friend_id); 
+if ($query->items) {
+	$content = ''; 
+	foreach($query->items AS $friend_id) {
+		$ank = get_user($friend_id); 
 
-	$mask_list = use_filters('ds_friends_mask_list_item', array(
-	    '%class_list%' => 'list-item', 
-	    '%counter%' => 0, 
-		'%thumbnail%' => get_avatar($ank['id'], 'thumbnail'), 
-	    '%title%' => text($ank['nick']), 
-	    '%link%' => get_user_url($ank['id']), 
-	)); 
+		$mask_list = use_filters('ds_friends_mask_list_item', array(
+		    '%class_list%' => 'list-item', 
+		    '%counter%' => 0, 
+			'%thumbnail%' => get_avatar($ank['id'], 'thumbnail'), 
+		    '%title%' => text($ank['nick']), 
+		    '%link%' => get_user_url($ank['id']), 
+		)); 
 
-	$content .= str_replace(array_keys($mask_list), array_values($mask_list), $template_list); 
+		$content .= str_replace(array_keys($mask_list), array_values($mask_list), $template_list); 
+	}
+
+	echo str_replace('%content%', $content, $template_box); 
+
+	if ( $query->pages > 1 ) {
+	    str('?', $query->pages, $query->paged);
+	}	
+} else {
+	$empty = use_filters('ds_friends_empty', array(
+		'friends' => array(
+			'h2' => __('Список друзей пуст'), 
+			'description' => __('В этом списке будут отображаться все Ваши подтвержденные друзья.'), 
+		), 
+		'requests' => array(
+			'h2' => __('Заявок в друзья нет'), 
+			'description' => __('Все новые предложения о дружбе будут в этом разделе.'), 
+		), 
+		'subscribers' => array(
+			'h2' => __('Список подписчиков'), 
+			'description' => __('Похоже, на вашу страничку еще никто не подписан. Но это временное явление.'), 
+		), 
+		'subscriptions' => array(
+			'h2' => __('Ваши подписки'), 
+			'description' => __('Похоже, вы ещё не подписаны ни на одного человека.'), 
+		), 
+		'out_requests' => array(
+			'h2' => __('Ваши заявки в друзья'), 
+			'description' => __('В этом списке, будут отображаться все активные заявки, которые Вы отправляли другим пользователям.'), 
+		), 
+	), $uid); 
+
+	if (isset($empty[$section])) {
+	    echo '<div class="empty empty-friends">';
+	    if (!empty($empty[$section]['h2'])) {
+	    	echo '<h2>' . $empty[$section]['h2'] . '</h2>';
+	    }
+	    
+	    if (!empty($empty[$section]['description'])) {
+	    	echo '<p>' . $empty[$section]['description'] . '</p>';
+	    }
+	    echo '</div>';		
+	}
 }
 
-echo str_replace('%content%', $content, $template_box); 
-
-if ( $query->pages > 1 ) {
-    str('?', $query->pages, $query->paged);
-}
 
 get_footer(); 

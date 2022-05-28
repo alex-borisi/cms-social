@@ -109,8 +109,9 @@ jQuery(function($) {
 		}, 
 		success: function(event) {
 			ds_playlist = event;
-			if (event.list) {
+			if (event.list.length > 0) {
 				$('.music_playlist').html(''); 
+
 				$.each(event.list, function(indx, elem) {
 					var attr = {
 						'data-id' : elem.id, 
